@@ -19,6 +19,14 @@ class Engine {
         receptor.setPivot(0.5, 0.5);
         return receptor;
     }
+
+    createTargetSprite(index, vx, vy, yOffset = 0) {
+        let sprite = this.createReceptorSprite(index, yOffset);
+        sprite.receptorIndex = index;
+        sprite.vx = vx;
+        sprite.vy = vy;
+        return sprite;
+    }
 }
 
 export {

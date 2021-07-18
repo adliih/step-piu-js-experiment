@@ -150,6 +150,15 @@ function setupReceptor(receptorCount) {
     console.debug('Setup receptor done');
 }
 
+function setupTargets(notes) {
+    console.debug('Setup Targets Count: ', notes.length);
+    notes.forEach((note, idx) => {
+        let target = engine.createTargetSprite(note.receptorIndex, 0, -5, idx * 70);
+        targets.addChild(target);
+    });
+    console.debug('Setup Targets Done');
+}
+
 function songSelection() {
     // Last choosen config is difficulty
     if (!gameConfig.difficulty) {
@@ -161,7 +170,8 @@ function songSelection() {
     // Setup receptor
     setupReceptor(noteDatum.receptorCount);
 
-    // // Create target sprites
+    // Create target sprites
+    setupTargets(noteDatum.notes);
 
     // Play the game
     g.state = play;
