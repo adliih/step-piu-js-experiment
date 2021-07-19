@@ -18,6 +18,7 @@ const gameScene = g.group(),
     hitReceptors = g.group(),
     targets = g.group();
 
+g.fps = 30;
 g.scaleToWindow();
 g.start();
 
@@ -33,6 +34,19 @@ songSelector.addEventListener('change', selectSong);
 
 let difficultySelector = document.getElementById('difficulty_select');
 difficultySelector.addEventListener('change', selectDifficulty);
+
+let pauseButton = document.getElementById('pause_button');
+pauseButton.addEventListener('click', togglePause);
+
+function togglePause() {
+    if (g.paused) {
+        g.resume();
+        pauseButton.innerHTML = 'Pause';
+    } else {
+        g.pause();
+        pauseButton.innerHTML = 'Resume';
+    }
+}
 
 function loadSongMap() {
     let whitelistExtension = [EXTENSION_SSC, EXTENSION_MP3];
@@ -153,7 +167,7 @@ function setupReceptor(receptorCount) {
 function setupTargets(notes) {
     console.debug('Setup Targets Count: ', notes.length);
     notes.forEach((note, idx) => {
-        let target = engine.createTargetSprite(note.receptorIndex, 0, -5, idx * 70);
+        let target = engine.createTargetSprite(note);
         targets.addChild(target);
     });
     console.debug('Setup Targets Done');
@@ -209,4 +223,5 @@ function moveTargets() {
 globalThis.g = g;
 globalThis.gameConfig = gameConfig;
 globalThis.receptors = receptors;
+globalThis.targets = targets;
 globalThis.engine = engine;

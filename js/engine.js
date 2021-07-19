@@ -1,6 +1,8 @@
+import { NOTE_TYPE } from './struct.js';
 
 class Engine {
     g;
+    currentlyHold = {};
     constructor(hexiGameInstance) {
         this.g = hexiGameInstance;
     }
@@ -16,15 +18,32 @@ class Engine {
         let receptor = this.g.rectangle(32, 32, colorMap[index % 5]);
         receptor.x = index * 64;
         receptor.y += yOffset;
-        receptor.setPivot(0.5, 0.5);
         return receptor;
     }
 
-    createTargetSprite(index, vx, vy, yOffset = 0) {
+    /**
+     * Create sprite for moving target.
+     * @param {Note} note
+     */
+    createTargetSprite(note) {
+        let vy = -10;
+        let yOffset = -vy * (note.hitTime * this.g.fps) + 100;
+        let index = note.receptorIndex;
+
         let sprite = this.createReceptorSprite(index, yOffset);
         sprite.receptorIndex = index;
-        sprite.vx = vx;
         sprite.vy = vy;
+
+        if (note.type == NOTE_TYPE.HOLD_HEAD) {
+            this.currentlyHold[index] = sprite;
+        }
+
+        if (note.type == NOTE_TYPE.HOLD_ROLL_END) {
+            let head = this.currentlyHold[index];
+            head.height += sprite.y - head.y - head.height;
+            delete this.currentlyHold[index];
+        }
+
         return sprite;
     }
 }
